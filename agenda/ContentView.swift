@@ -40,35 +40,52 @@ struct Item: Identifiable {
     var id: String = UUID().uuidString
     
     let description: String
+    var completed: Bool
     
     init(description: String) {
         self.description = description
+        self.completed = false
     }
 }
 
 struct ItemView: View {
-    let item: Item
+    @State var item: Item
     
     var body: some View {
-        HStack(spacing: 10) {
+        HStack(spacing: 6) {
+            if item.completed {
+                Circle()
+                    .fill(Color.blue)
+                    .frame(width:14, height:14, alignment: .center).onTapGesture {
+                        self.item.completed = false
+                    }
+            } else {
+                Circle()
+                    .frame(width:14, height:14, alignment: .center).onTapGesture {
+                        self.item.completed = true
+                    }
+            }
             Text(item.description)
         }
-    }
-    
-    init(item: Item) {
-        self.item = item
     }
 }
 
 struct DetailsView: View {
-    let list: ItemList
+    @State var list: ItemList
+    
     var body: some View {
-        List  {
-            ForEach(list.items) { item in
-                ItemView(item: item)
+        VStack {
+            Button(action: {
+                self.list.items.append(Item(description: "Neues Item"))
+            }) {
+                Text("Neu...")
+            }
+            List  {
+                ForEach(list.items) { item in
+                    ItemView(item: item)
+                }
             }
         }
-        .frame(maxWidth: .infinity, maxHeight: .infinity)
     }
 }
 
@@ -93,5 +110,9 @@ struct TestData {
         planned.items.append(Item(description: "Beschreibung ausliefern"))
 
         return [inbox, today, planned]
+    }
+    
+    static func toggle(item: Item)  {
+        print("Here I am")
     }
 }
