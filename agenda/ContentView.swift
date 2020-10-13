@@ -54,16 +54,17 @@ struct ItemView: View {
     var body: some View {
         HStack(spacing: 6) {
             if item.completed {
-                Circle()
+                RoundedRectangle(cornerRadius: 5, style: .continuous)
                     .fill(Color.blue)
-                    .frame(width:14, height:14, alignment: .center).onTapGesture {
+                    .frame(width:14, height:14, alignment: .center).contentShape(Circle()).gesture(TapGesture().onEnded {
                         self.item.completed = false
-                    }
+                    })
             } else {
-                Circle()
-                    .frame(width:14, height:14, alignment: .center).onTapGesture {
+                RoundedRectangle(cornerRadius: 5, style: .continuous)
+                    .strokeBorder(Color.blue)
+                    .frame(width:14, height:14, alignment: .center).contentShape(Circle()).gesture(TapGesture().onEnded {
                         self.item.completed = true
-                    }
+                    })
             }
             Text(item.description)
         }
